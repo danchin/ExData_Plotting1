@@ -1,0 +1,19 @@
+## Read in the relevant training datasets
+housepower <- read.table("household_power_consumption.txt", sep=";", na.strings = "?", header=TRUE)
+
+## Create new column combining Date and Time fields and call it DateTime
+DateTime <- paste(housepower$Date, housepower$Time)
+housepower <- cbind (housepower, DateTime)
+
+## Convert date and time fields from "Character" format to "Date" and "Time" formats respectively
+housepower$Date <- as.Date(housepower$Date, "%d/%m/%Y")
+housepower$Time <- strptime(housepower$Time, "%H:%M:%S")
+housepower$DateTime <- strptime(housepower$DateTime, "%d/%m/%Y %H:%M:%S")
+
+## Subset only data from 1 Feb 2007 or 2 Feb 2007
+febpower<-subset(housepower, Date=="2007-02-01" | Date=="2007-02-02")
+
+## Plot chart of Global Active Power by date and save in .png format
+png(filename="plot2.png", width=480, height=480)
+with(febpower,plot(DateTime, Global_active_power, type="l", ylab="Global Active Power (kilowatts)", xlab=""))
+dev.off()
